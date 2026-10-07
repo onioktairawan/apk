@@ -31,25 +31,23 @@ jobs:
           echo "ANDROID_HOME=$ANDROID_HOME"
           echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
 
-          SDKMANAGER="$(find "$ANDROID_HOME" -type f -name sdkmanager | head -n 1)"
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
 
-          if [ -z "$SDKMANAGER" ]; then
-            echo "sdkmanager tidak ditemukan"
-            find "$ANDROID_HOME" -maxdepth 4 -type f | head -100
+          if [ ! -f "$SDKMANAGER" ]; then
+            echo "sdkmanager tidak ditemukan di $SDKMANAGER"
             exit 1
           fi
 
-          echo "SDKMANAGER=$SDKMANAGER"
-          chmod +x "$SDKMANAGER"
           echo "SDKMANAGER=$SDKMANAGER" >> "$GITHUB_ENV"
 
-          "$SDKMANAGER" --version
+          bash "$SDKMANAGER" --version
 
       - name: Install Android SDK 35
         shell: bash
         run: |
-          yes | "$SDKMANAGER" --licenses > /dev/null || true
-          "$SDKMANAGER" \
+          yes | bash "$SDKMANAGER" --licenses > /dev/null || true
+
+          bash "$SDKMANAGER" \
             "platforms;android-35" \
             "build-tools;35.0.0"
 
@@ -67,6 +65,7 @@ jobs:
       - name: Prepare APK
         run: |
           mkdir -p artifacts
+
           cp app/build/outputs/apk/debug/app-debug.apk \
              artifacts/PoolTrainingAnalyzer-debug.apk
 
