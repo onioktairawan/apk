@@ -1,0 +1,6 @@
+<resources>
+    <color name="bg">#0A101C</color>
+    <color name="accent">#00D69F</color>
+    <color name="text">#F4F7FB</color>
+    <color name="muted">#9AA8BB</color>
+</resources>
